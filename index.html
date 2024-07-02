@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syringe Hunter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-image: url('bathroom.jpg'); /* Placeholder image, replace with your own */
+            background-size: cover;
+            border: 2px solid #000;
+        }
+        .syringe {
+            position: absolute;
+            width: 50px;
+            height: 20px;
+            background-color: red;
+            cursor: pointer;
+        }
+        #timer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        #hint {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="timer">Time: <span id="time">60</span>s</div>
+        <div id="hint" onclick="useHint()">Hint</div>
+        <div class="syringe" style="top: 100px; left: 200px;"></div>
+        <div class="syringe" style="top: 300px; left: 400px;"></div>
+        <div class="syringe" style="top: 450px; left: 600px;"></div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
