@@ -3,44 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syringe Hunter</title>
+    <title>Syringe Hunter - Retro Pixel Style</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Press Start 2P', cursive;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #000;
+            color: #fff;
         }
         #game-container {
             position: relative;
             width: 800px;
             height: 600px;
-            background-image: url('bathroom.jpeg');
+            background-image: url('bathroom_pixelated.png');
             background-size: cover;
-            border: 2px solid #000;
+            border: 2px solid #fff;
         }
         .needle, .cap {
             position: absolute;
-            width: 50px;
+            width: 20px;
             height: 20px;
             cursor: pointer;
             transition: transform 0.3s;
+            image-rendering: pixelated;
         }
         .needle {
-            background-color: red;
+            background-image: url('needle_pixel.png');
+            background-size: cover;
         }
         .cap {
-            background-color: blue;
+            background-image: url('cap_pixel.png');
+            background-size: cover;
         }
         #timer, #score {
             position: absolute;
             top: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.7);
             padding: 5px;
             border-radius: 5px;
+            font-size: 14px;
         }
         #timer {
             left: 10px;
@@ -52,10 +58,11 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.7);
             padding: 5px;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
