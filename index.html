@@ -18,16 +18,21 @@
             position: relative;
             width: 800px;
             height: 600px;
-            background-image: url('bathroom.jpeg'); /* Placeholder image, replace with your own */
+            background-image: url('bathroom.jpg');
             background-size: cover;
             border: 2px solid #000;
         }
-        .syringe {
+        .needle, .cap {
             position: absolute;
             width: 50px;
             height: 20px;
-            background-color: red;
             cursor: pointer;
+        }
+        .needle {
+            background-color: red;
+        }
+        .cap {
+            background-color: blue;
         }
         #timer {
             position: absolute;
@@ -52,9 +57,10 @@
     <div id="game-container">
         <div id="timer">Time: <span id="time">60</span>s</div>
         <div id="hint" onclick="useHint()">Hint</div>
-        <div class="syringe" style="top: 100px; left: 200px;"></div>
-        <div class="syringe" style="top: 300px; left: 400px;"></div>
-        <div class="syringe" style="top: 450px; left: 600px;"></div>
+        <div class="needle" data-id="1" style="top: 100px; left: 200px;"></div>
+        <div class="cap" data-id="1" style="top: 400px; left: 500px;"></div>
+        <div class="needle" data-id="2" style="top: 200px; left: 300px;"></div>
+        <div class="cap" data-id="2" style="top: 500px; left: 600px;"></div>
     </div>
 
     <script src="game.js"></script>
