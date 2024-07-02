@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         needle.addEventListener('click', () => {
             if (!currentNeedle) {
                 currentNeedle = needle;
-                needle.style.backgroundColor = 'yellow'; // Highlight selected needle
+                needle.style.transform = 'scale(1.2)'; // Highlight selected needle
             }
         });
     });
