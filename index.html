@@ -27,6 +27,7 @@
             width: 50px;
             height: 20px;
             cursor: pointer;
+            transition: transform 0.3s;
         }
         .needle {
             background-color: red;
@@ -34,13 +35,18 @@
         .cap {
             background-color: blue;
         }
-        #timer {
+        #timer, #score {
             position: absolute;
             top: 10px;
-            left: 10px;
             background: rgba(255, 255, 255, 0.7);
             padding: 5px;
             border-radius: 5px;
+        }
+        #timer {
+            left: 10px;
+        }
+        #score {
+            right: 80px;
         }
         #hint {
             position: absolute;
@@ -56,12 +62,19 @@
 <body>
     <div id="game-container">
         <div id="timer">Time: <span id="time">60</span>s</div>
+        <div id="score">Score: <span id="score-value">0</span></div>
         <div id="hint" onclick="useHint()">Hint</div>
-        <div class="needle" data-id="1" style="top: 100px; left: 200px;"></div>
-        <div class="cap" data-id="1" style="top: 400px; left: 500px;"></div>
-        <div class="needle" data-id="2" style="top: 200px; left: 300px;"></div>
-        <div class="cap" data-id="2" style="top: 500px; left: 600px;"></div>
+        <div class="needle" data-id="1"></div>
+        <div class="cap" data-id="1"></div>
+        <div class="needle" data-id="2"></div>
+        <div class="cap" data-id="2"></div>
+        <div class="needle" data-id="3"></div>
+        <div class="cap" data-id="3"></div>
     </div>
+
+    <audio id="find-sound" src="find.mp3"></audio>
+    <audio id="hint-sound" src="hint.mp3"></audio>
+    <audio id="error-sound" src="error.mp3"></audio>
 
     <script src="game.js"></script>
 </body>
