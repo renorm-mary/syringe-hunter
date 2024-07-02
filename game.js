@@ -1,17 +1,32 @@
 let timeLeft = 60;
-let syringesFound = 0;
-const totalSyringes = document.querySelectorAll('.syringe').length;
+let itemsFound = 0;
+const totalItems = document.querySelectorAll('.needle').length;
 let hintsUsed = 0;
+let currentNeedle = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     const timerElement = document.getElementById('time');
-    const syringes = document.querySelectorAll('.syringe');
+    const needles = document.querySelectorAll('.needle');
+    const caps = document.querySelectorAll('.cap');
 
-    syringes.forEach(syringe => {
-        syringe.addEventListener('click', () => {
-            syringe.style.visibility = 'hidden';
-            syringesFound++;
-            checkGameStatus();
+    needles.forEach(needle => {
+        needle.addEventListener('click', () => {
+            if (!currentNeedle) {
+                currentNeedle = needle;
+                needle.style.backgroundColor = 'yellow'; // Highlight selected needle
+            }
+        });
+    });
+
+    caps.forEach(cap => {
+        cap.addEventListener('click', () => {
+            if (currentNeedle && currentNeedle.dataset.id === cap.dataset.id) {
+                currentNeedle.style.visibility = 'hidden';
+                cap.style.visibility = 'hidden';
+                itemsFound++;
+                currentNeedle = null;
+                checkGameStatus();
+            }
         });
     });
 
@@ -21,30 +36,43 @@ document.addEventListener('DOMContentLoaded', () => {
             timerElement.textContent = timeLeft;
         } else {
             clearInterval(countdown);
-            alert('Time\'s up! You found ' + syringesFound + ' syringes.');
+            alert('Time\'s up! You found ' + itemsFound + ' needles and caps.');
         }
     }, 1000);
 });
 
 function checkGameStatus() {
-    if (syringesFound === totalSyringes) {
-        alert('Congratulations! You found all the syringes!');
+    if (itemsFound === totalItems) {
+        alert('Congratulations! You found all the needles and caps!');
         clearInterval(countdown);
     }
 }
 
 function useHint() {
     if (hintsUsed < 3) {
-        const syringes = document.querySelectorAll('.syringe');
-        for (let syringe of syringes) {
-            if (syringe.style.visibility !== 'hidden') {
-                syringe.style.outline = '2px solid yellow';
+        const needles = document.querySelectorAll('.needle');
+        const caps = document.querySelectorAll('.cap');
+        let foundHint = false;
+        needles.forEach(needle => {
+            if (needle.style.visibility !== 'hidden' && !foundHint) {
+                needle.style.outline = '2px solid yellow';
                 setTimeout(() => {
-                    syringe.style.outline = 'none';
+                    needle.style.outline = 'none';
                 }, 1000);
+                foundHint = true;
                 hintsUsed++;
-                break;
             }
+        });
+        if (!foundHint) {
+            caps.forEach(cap => {
+                if (cap.style.visibility !== 'hidden' && !foundHint) {
+                    cap.style.outline = '2px solid yellow';
+                    setTimeout(() => {
+                        cap.style.outline = 'none';
+                    }, 1000);
+                    hintsUsed++;
+                }
+            });
         }
     } else {
         alert('No more hints available!');
