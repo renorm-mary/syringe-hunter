@@ -1,123 +1,149 @@
-let timeLeft = 60;
-let itemsFound = 0;
-const totalItems = document.querySelectorAll('.needle').length;
-let hintsUsed = 0;
-let currentNeedle = null;
-let score = 0;
-const positions = [];
+// Initialize scene, camera, and renderer
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const timerElement = document.getElementById('time');
-    const scoreElement = document.getElementById('score-value');
-    const needles = document.querySelectorAll('.needle');
-    const caps = document.querySelectorAll('.cap');
-    const findSound = document.getElementById('find-sound');
-    const hintSound = document.getElementById('hint-sound');
-    const errorSound = document.getElementById('error-sound');
+// Basic Lighting
+const ambientLight = new THREE.AmbientLight(0x404040); // soft white light
+scene.add(ambientLight);
 
-    randomizePositions(needles);
-    randomizePositions(caps);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(1, 1, 0.5).normalize();
+scene.add(directionalLight);
 
-    needles.forEach(needle => {
-        needle.addEventListener('click', () => {
-            if (!currentNeedle) {
-                currentNeedle = needle;
-                needle.style.transform = 'scale(1.2)'; // Highlight selected needle
-            }
-        });
-    });
+camera.position.z = 5;
 
-    caps.forEach(cap => {
-        cap.addEventListener('click', () => {
-            if (currentNeedle && currentNeedle.dataset.id === cap.dataset.id) {
-                currentNeedle.style.visibility = 'hidden';
-                cap.style.visibility = 'hidden';
-                itemsFound++;
-                score += 100 - hintsUsed * 10; // Simple scoring mechanism
-                scoreElement.textContent = score;
-                findSound.play();
-                currentNeedle = null;
-                checkGameStatus();
-            } else if (currentNeedle) {
-                errorSound.play();
-            }
-        });
-    });
+// Create Main Character
+const geometry = new THREE.BoxGeometry(1, 1.5, 1);
+const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+const mainCharacter = new THREE.Mesh(geometry, material);
+scene.add(mainCharacter);
 
-    const countdown = setInterval(() => {
-        if (timeLeft > 0) {
-            timeLeft--;
-            timerElement.textContent = timeLeft;
-        } else {
-            clearInterval(countdown);
-            alert('Time\'s up! You found ' + itemsFound + ' needles and caps. Your score is ' + score + '.');
-        }
-    }, 1000);
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+animate();
+
+// Movement Implementation
+document.addEventListener('keydown', function(event) {
+    switch (event.key) {
+        case 'w':
+            mainCharacter.position.z -= 0.1;
+            break;
+        case 's':
+            mainCharacter.position.z += 0.1;
+            break;
+        case 'a':
+            mainCharacter.position.x -= 0.1;
+            break;
+        case 'd':
+            mainCharacter.position.x += 0.1;
+            break;
+    }
 });
 
-function checkGameStatus() {
-    if (itemsFound === totalItems) {
-        alert('Congratulations! You found all the needles and caps! Your score is ' + score + '.');
-        clearInterval(countdown);
-    }
+// Create Anthropomorphic Syringes
+function createSyringe() {
+    const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.2, 1, 32);
+    const bodyMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+    const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+
+    const headGeometry = new THREE.SphereGeometry(0.3, 32, 32);
+    const headMaterial = new THREE.MeshBasicMaterial({color: 0xffd700});
+    const head = new THREE.Mesh(headGeometry, headMaterial);
+    head.position.y = 0.8;
+
+    const syringe = new THREE.Group();
+    syringe.add(body);
+    syringe.add(head);
+
+    return syringe;
 }
 
-function useHint() {
-    if (hintsUsed < 3) {
-        const needles = document.querySelectorAll('.needle');
-        const caps = document.querySelectorAll('.cap');
-        let foundHint = false;
-        needles.forEach(needle => {
-            if (needle.style.visibility !== 'hidden' && !foundHint) {
-                needle.style.outline = '2px solid yellow';
-                setTimeout(() => {
-                    needle.style.outline = 'none';
-                }, 1000);
-                foundHint = true;
-                hintsUsed++;
-                hintSound.play();
-            }
-        });
-        if (!foundHint) {
-            caps.forEach(cap => {
-                if (cap.style.visibility !== 'hidden' && !foundHint) {
-                    cap.style.outline = '2px solid yellow';
-                    setTimeout(() => {
-                        cap.style.outline = 'none';
-                    }, 1000);
-                    hintsUsed++;
-                    hintSound.play();
-                }
-            });
+const syringe1 = createSyringe();
+syringe1.position.set(2, 0, -5);
+scene.add(syringe1);
+
+const syringe2 = createSyringe();
+syringe2.position.set(-2, 0, -5);
+scene.add(syringe2);
+
+// Create Cap
+function createCap() {
+    const capGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.1, 32);
+    const capMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff});
+    const cap = new THREE.Mesh(capGeometry, capMaterial);
+    return cap;
+}
+
+const cap1 = createCap();
+cap1.position.set(1, 0, -3);
+scene.add(cap1);
+
+const cap2 = createCap();
+cap2.position.set(-1, 0, -3);
+scene.add(cap2);
+
+// Interaction Logic
+let capsCollected = 0;
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'e') { // Press 'e' to interact
+        const distance1 = mainCharacter.position.distanceTo(cap1.position);
+        const distance2 = mainCharacter.position.distanceTo(cap2.position);
+
+        if (distance1 < 1) {
+            scene.remove(cap1);
+            capsCollected++;
         }
-    } else {
-        alert('No more hints available!');
-    }
-}
+        if (distance2 < 1) {
+            scene.remove(cap2);
+            capsCollected++;
+        }
 
-function randomizePositions(elements) {
-    const container = document.getElementById('game-container');
-    const containerWidth = container.offsetWidth;
-    const containerHeight = container.offsetHeight;
+        const syringeDistance1 = mainCharacter.position.distanceTo(syringe1.position);
+        const syringeDistance2 = mainCharacter.position.distanceTo(syringe2.position);
 
-    elements.forEach(element => {
-        let posX, posY;
-        do {
-            posX = Math.floor(Math.random() * (containerWidth - element.offsetWidth));
-            posY = Math.floor(Math.random() * (containerHeight - element.offsetHeight));
-        } while (isOverlap(posX, posY, element.offsetWidth, element.offsetHeight));
-
-        element.style.left = `${posX}px`;
-        element.style.top = `${posY}px`;
-        positions.push({x: posX, y: posY, width: element.offsetWidth, height: element.offsetHeight});
-    });
-}
-
-function isOverlap(x, y, width, height) {
-    for (let pos of positions) {
-        if (!(x + width < pos.x || x > pos.x + pos.width || y + height < pos.y || y > pos.y + pos.height)) {
-            return true;
+        if (syringeDistance1 < 1 && capsCollected > 0) {
+            syringe1.children[1].material.color.set(0x00ff00); // Change head color to green (capped)
+            capsCollected--;
+        }
+        if (syringeDistance2 < 1 && capsCollected > 0) {
+            syringe2.children[1].material.color.set(0x00ff00); // Change head color to green (capped)
+            capsCollected--;
         }
     }
-    return false;
+});
+
+// Shooting Mechanics
+function createProjectile() {
+    const geometry = new THREE.SphereGeometry(0.1, 8, 8);
+    const material = new THREE.MeshBasicMaterial({color: 0x0000ff});
+    const projectile = new THREE.Mesh(geometry, material);
+    return projectile;
 }
+
+document.addEventListener('click', function() {
+    const projectile = createProjectile();
+    projectile.position.set(mainCharacter.position.x, mainCharacter.position.y, mainCharacter.position.z);
+    scene.add(projectile);
+
+    function moveProjectile() {
+        projectile.position.z -= 0.2;
+        requestAnimationFrame(moveProjectile);
+
+        if (projectile.position.distanceTo(syringe1.position) < 1) {
+            syringe1.children[1].material.color.set(0x0000ff); // Change head color to blue (disabled)
+            scene.remove(projectile);
+        }
+
+        if (projectile.position.distanceTo(syringe2.position) < 1) {
+            syringe2.children[1].material.color.set(0x0000ff); // Change head color to blue (disabled)
+            scene.remove(projectile);
+        }
+    }
+
+    moveProjectile();
+});
