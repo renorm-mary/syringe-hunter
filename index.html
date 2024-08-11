@@ -3,86 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syringe Hunter - Retro Pixel Style</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); /* Retro font */
-        body {
-            font-family: 'Press Start 2P', cursive;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #000;
-            color: #fff;
-        }
-        #game-container {
-            position: relative;
-            width: 800px;
-            height: 600px;
-            background-image: url('bathroom_pixelated.png');
-            background-size: cover;
-            border: 2px solid #fff;
-        }
-        .needle, .cap {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            image-rendering: pixelated;
-        }
-        .needle {
-            background-image: url('needle_pixel.png');
-            background-size: cover;
-        }
-        .cap {
-            background-image: url('cap_pixel.png');
-            background-size: cover;
-        }
-        #timer, #score {
-            position: absolute;
-            top: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        #timer {
-            left: 10px;
-        }
-        #score {
-            right: 80px;
-        }
-        #hint {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-    </style>
+    <title>3D Retro Shooter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <div id="game-container">
-        <div id="timer">Time: <span id="time">60</span>s</div>
-        <div id="score">Score: <span id="score-value">0</span></div>
-        <div id="hint" onclick="useHint()">Hint</div>
-        <div class="needle" data-id="1"></div>
-        <div class="cap" data-id="1"></div>
-        <div class="needle" data-id="2"></div>
-        <div class="cap" data-id="2"></div>
-        <div class="needle" data-id="3"></div>
-        <div class="cap" data-id="3"></div>
-    </div>
-
-    <audio id="find-sound" src="find.mp3"></audio>
-    <audio id="hint-sound" src="hint.mp3"></audio>
-    <audio id="error-sound" src="error.mp3"></audio>
-
     <script src="game.js"></script>
 </body>
 </html>
